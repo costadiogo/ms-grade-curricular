@@ -24,8 +24,8 @@ public class MateriaDto {
     @NotBlank(message = "Informe o código da matéria!")
     private String code;
 
-    @Min(value = 1, message = "O mínimo permitido é de 1 vez por ano!")
-    @Max(value = 2, message = "O máximo permitido é de 2 vezes por ano!")
+    @Min(value = 1, message = "A frequência mínima permitida é de 1 vez por ano!")
+    @Max(value = 2, message = "A frequência máxima permitida é de 2 vezes por ano!")
     private int frequency;
     
 }
