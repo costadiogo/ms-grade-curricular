@@ -20,13 +20,19 @@ public class MateriaService implements IMateriaService {
 
     @Autowired
     private MateriaRepository materiaRepository;
+    private ModelMapper mapper;
+
+    @Autowired
+    public MateriaService(MateriaRepository materiaRepository) {
+        this.mapper = new ModelMapper();
+        this.materiaRepository = materiaRepository;
+
+    }
 
     @Override
     public List<MateriaDto> listar() {
         try {
-            ModelMapper mapper = new ModelMapper();
-
-            return mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {}.getType());
+            return this.mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {}.getType());
         } catch (Exception e) {
             return new ArrayList<>();
         }
@@ -35,11 +41,10 @@ public class MateriaService implements IMateriaService {
     @Override
     public MateriaDto consultar(Long id) {
         try {
-            ModelMapper mapper = new ModelMapper();
             Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(id);
 
             if (materiaOptional.isPresent()) {
-                return mapper.map(materiaOptional.get(), MateriaDto.class);
+                return this.mapper.map(materiaOptional.get(), MateriaDto.class);
             } else {
 
                 throw new MateriaException("Matéria não encontrada", HttpStatus.NOT_FOUND);
@@ -56,9 +61,7 @@ public class MateriaService implements IMateriaService {
     @Override
     public Boolean cadastrar(MateriaDto materia) {
         try {
-            ModelMapper mapper = new ModelMapper();
-
-            MateriaEntity materiaEnt = mapper.map(materia, MateriaEntity.class);
+            MateriaEntity materiaEnt = this.mapper.map(materia, MateriaEntity.class);
             this.materiaRepository.save(materiaEnt);
 
             return true;
@@ -70,11 +73,8 @@ public class MateriaService implements IMateriaService {
     @Override
     public Boolean atualizar(MateriaDto materia) {
         try {
-                
             this.consultar(materia.getId());
-
-            ModelMapper mapper = new ModelMapper();
-            MateriaEntity materiaEntityAtualizada = mapper.map(materia, MateriaEntity.class);
+            MateriaEntity materiaEntityAtualizada = this.mapper.map(materia, MateriaEntity.class);
 
             this.materiaRepository.save(materiaEntityAtualizada);
 
