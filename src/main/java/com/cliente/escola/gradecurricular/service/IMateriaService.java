@@ -2,27 +2,27 @@ package com.cliente.escola.gradecurricular.service;
 
 import java.util.List;
 
-import com.cliente.escola.gradecurricular.entity.MateriaEntity;
+import com.cliente.escola.gradecurricular.dto.MateriaDto;
 
 public interface IMateriaService {
 
 
-    public Boolean atualizar(final MateriaEntity materia);
+    public Boolean atualizar(final MateriaDto materia);
 
     public Boolean excluir(final Long id);
 
     /*
 	 * LISTAR todas matérias. 
 	 */
-	public List<MateriaEntity> listar();
+	public List<MateriaDto> listar();
 	
 	/*
 	 * CONSULTA uma matéria a partir do ID.  
 	 */
-	public MateriaEntity consultar(final Long id);
+	public MateriaDto consultar(final Long id);
 	
 	/*
 	 * CADASTRAR uma matéria.  
 	 */
-	public Boolean cadastrar(final MateriaEntity materia);
+	public Boolean cadastrar(final MateriaDto materia);
 }

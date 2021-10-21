@@ -2,9 +2,8 @@ package com.cliente.escola.gradecurricular.controller;
 
 import java.util.List;
 
-import com.cliente.escola.gradecurricular.entity.MateriaEntity;
-import com.cliente.escola.gradecurricular.repository.MateriaRepository;
-import com.cliente.escola.gradecurricular.service.MateriaService;
+import com.cliente.escola.gradecurricular.dto.MateriaDto;
+import com.cliente.escola.gradecurricular.service.IMateriaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,44 +22,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class MateriaController {
 
     @Autowired
-    private MateriaRepository materiaRepository;
-
-    @Autowired
-    private MateriaService materiaService;
+    private IMateriaService materiaService;
 
     //Listando todas a Matérias
     @GetMapping("/materia")
-    public ResponseEntity<List<MateriaEntity>> listMateria() {
-        return ResponseEntity.status(HttpStatus.OK).body(materiaRepository.findAll());
+    public ResponseEntity<List<MateriaDto>> listMateria() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.listar());
     }
 
 
     //Listando as matérias por ID
     @GetMapping("/materia/{id}")
-    public ResponseEntity<MateriaEntity> listMateriaById(@PathVariable Long id) {
+    public ResponseEntity<MateriaDto> listMateriaById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.consultar(id));
     }
 
     //Criando as Matérias
     @PostMapping("/materia/create")
-    public ResponseEntity<Boolean> createMateria(@RequestBody MateriaEntity materia) {
-        try {
-            this.materiaRepository.save(materia);
-            return ResponseEntity.status(HttpStatus.CREATED).body(true);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-        }
+    public ResponseEntity<Boolean> createMateria(@RequestBody MateriaDto materia){
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.materiaService.cadastrar(materia));
     }
 
     //Atualizando as Matérias
     @PutMapping("/materia")
-    public ResponseEntity<Boolean> updateMateria(@RequestBody MateriaEntity materia) {
-
-       try {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.materiaService.atualizar(materia));
-       } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-       }
+    public ResponseEntity<Boolean> updateMateria(@RequestBody MateriaDto materia) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.atualizar(materia));
     }
 
     //Deletando as matérias
