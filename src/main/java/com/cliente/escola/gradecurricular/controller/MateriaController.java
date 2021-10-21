@@ -2,6 +2,8 @@ package com.cliente.escola.gradecurricular.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.cliente.escola.gradecurricular.dto.MateriaDto;
 import com.cliente.escola.gradecurricular.service.IMateriaService;
 
@@ -39,13 +41,13 @@ public class MateriaController {
 
     //Criando as Matérias
     @PostMapping("/materia/create")
-    public ResponseEntity<Boolean> createMateria(@RequestBody MateriaDto materia){
+    public ResponseEntity<Boolean> createMateria(@Valid @RequestBody MateriaDto materia){
         return ResponseEntity.status(HttpStatus.CREATED).body(this.materiaService.cadastrar(materia));
     }
 
     //Atualizando as Matérias
     @PutMapping("/materia")
-    public ResponseEntity<Boolean> updateMateria(@RequestBody MateriaDto materia) {
+    public ResponseEntity<Boolean> updateMateria(@Valid @RequestBody MateriaDto materia) {
         return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.atualizar(materia));
     }
 
