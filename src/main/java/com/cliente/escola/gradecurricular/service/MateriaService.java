@@ -1,6 +1,5 @@
 package com.cliente.escola.gradecurricular.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class MateriaService implements IMateriaService {
 
+    private static final String MESSAGE_ERROR = "Erro interno identificado contate o suporte.";
+    private static final String MATERIA_NAO_ENCONTRADA = "Matéria não encontrada";
+
     @Autowired
     private MateriaRepository materiaRepository;
     private ModelMapper mapper;
@@ -34,7 +36,7 @@ public class MateriaService implements IMateriaService {
         try {
             return this.mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {}.getType());
         } catch (Exception e) {
-            return new ArrayList<>();
+            throw new MateriaException(MESSAGE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -47,14 +49,14 @@ public class MateriaService implements IMateriaService {
                 return this.mapper.map(materiaOptional.get(), MateriaDto.class);
             } else {
 
-                throw new MateriaException("Matéria não encontrada", HttpStatus.NOT_FOUND);
+                throw new MateriaException(MATERIA_NAO_ENCONTRADA, HttpStatus.NOT_FOUND);
             }      
           
         } catch (MateriaException m) {
             throw m;
 
         } catch (Exception e) {
-            throw new MateriaException("Erro interno.",HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MateriaException(MESSAGE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -66,7 +68,7 @@ public class MateriaService implements IMateriaService {
 
             return true;
         } catch (Exception e) {
-            return false;
+            throw new MateriaException(MESSAGE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -81,9 +83,9 @@ public class MateriaService implements IMateriaService {
             return Boolean.TRUE;
 
         } catch (MateriaException m) {
-            return false;
+            throw m;
         } catch (Exception e) {
-            throw new MateriaException("Erro interno.",HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new MateriaException(MESSAGE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -91,9 +93,9 @@ public class MateriaService implements IMateriaService {
     public Boolean excluir(Long id) {
         try {
             this.materiaRepository.deleteById(id);
-            return true;
+            return Boolean.TRUE;
         } catch (Exception e) {
-            return false;
+            throw new MateriaException(MESSAGE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
