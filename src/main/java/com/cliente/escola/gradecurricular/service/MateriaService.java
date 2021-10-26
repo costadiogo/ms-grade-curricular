@@ -11,9 +11,12 @@ import com.cliente.escola.gradecurricular.repository.MateriaRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+@CacheConfig(cacheNames = "materia")
 @Service
 public class MateriaService implements IMateriaService {
 
@@ -31,6 +34,7 @@ public class MateriaService implements IMateriaService {
 
     }
 
+    @CachePut(unless = "#result.size() < 3")
     @Override
     public List<MateriaDto> listar() {
         try {
@@ -40,6 +44,7 @@ public class MateriaService implements IMateriaService {
         }
     }
 
+    @CachePut(key = "#id")
     @Override
     public MateriaDto consultar(Long id) {
         try {
