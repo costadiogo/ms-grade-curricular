@@ -1,11 +1,7 @@
 package com.cliente.escola.gradecurricular.handler;
 
 import com.cliente.escola.gradecurricular.exception.MateriaException;
-import com.cliente.escola.gradecurricular.model.ErrorMapResponse;
-import com.cliente.escola.gradecurricular.model.ErrorMapResponse.ErrorMapResponseBuilder;
-import com.cliente.escola.gradecurricular.model.ErrorResponse;
-import com.cliente.escola.gradecurricular.model.ErrorResponse.ErrorResponseBuilder;
-
+import com.cliente.escola.gradecurricular.model.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,17 +16,18 @@ import java.util.Map;
 public class ResourceHandler {
     
     @ExceptionHandler(MateriaException.class)
-    public ResponseEntity<ErrorResponse> handlerMateriaException(MateriaException message) {
-       ErrorResponseBuilder error = ErrorResponse.builder(); 
-       error.httpStatus(message.getHttpStatus().value());
-       error.message(message.getMessage());
-       error.timestamp(System.currentTimeMillis());
+    public ResponseEntity<Response<String>> handlerMateriaException(MateriaException message) {
+       Response<String> response = new Response<>();
+        response.setStatusCode(message.getHttpStatus().value());
+        response.setData(message.getMessage());
 
-       return ResponseEntity.status(message.getHttpStatus()).body(error.build());
+       return ResponseEntity.status(message.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorMapResponse> MethodArgumentNotValidException(MethodArgumentNotValidException message) {
+    public ResponseEntity<Response<Map<String, String>>> MethodArgumentNotValidException(
+            MethodArgumentNotValidException message) {
+
         Map<String, String> error = new HashMap<>();
         message.getBindingResult().getAllErrors().forEach(err -> {
             String fields = ((FieldError) err).getField();
@@ -38,11 +35,10 @@ public class ResourceHandler {
             error.put(fields, msg);
         });
 
-        ErrorMapResponseBuilder errorMap = ErrorMapResponse.builder();
-        errorMap.error(error)
-                .httpStatus(HttpStatus.BAD_REQUEST.value())
-                .timeStamp(System.currentTimeMillis());
+        Response<Map<String, String>> response = new Response<>();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setData(error);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMap.build());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

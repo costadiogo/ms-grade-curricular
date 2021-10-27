@@ -8,7 +8,6 @@ import com.cliente.escola.gradecurricular.dto.MateriaDto;
 import com.cliente.escola.gradecurricular.entity.MateriaEntity;
 import com.cliente.escola.gradecurricular.exception.MateriaException;
 import com.cliente.escola.gradecurricular.repository.MateriaRepository;
-
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
