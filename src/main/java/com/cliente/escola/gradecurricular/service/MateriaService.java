@@ -3,6 +3,7 @@ package com.cliente.escola.gradecurricular.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.cliente.escola.gradecurricular.controller.MateriaController;
 import com.cliente.escola.gradecurricular.dto.MateriaDto;
 import com.cliente.escola.gradecurricular.entity.MateriaEntity;
 import com.cliente.escola.gradecurricular.exception.MateriaException;
@@ -13,6 +14,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,16 @@ public class MateriaService implements IMateriaService {
     @Override
     public List<MateriaDto> listar() {
         try {
-            return this.mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {}.getType());
+
+            List<MateriaDto> materiaDto = this.mapper.map(this.materiaRepository.findAll(),
+                    new TypeToken<List<MateriaDto>>() {}.getType());
+
+            materiaDto.forEach(mat -> mat.add(WebMvcLinkBuilder
+                    .linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listMateriaById(mat.getId()))
+                    .withSelfRel()));
+
+            return materiaDto;
+
         } catch (Exception e) {
             throw new MateriaException(MESSAGE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
