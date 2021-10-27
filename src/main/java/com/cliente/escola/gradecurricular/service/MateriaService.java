@@ -114,4 +114,15 @@ public class MateriaService implements IMateriaService {
         }
     }
 
+    @Override
+    public List<MateriaDto> listByHourMinimum(int hourMin) {
+        return this.mapper.map(this.materiaRepository.findByHourMinimun(hourMin),
+                new TypeToken<List<MateriaDto>>() {}.getType());
+    }
+
+    @Override
+    public List<MateriaDto> listByFrequency(int frequency) {
+        return this.mapper.map(this.materiaRepository.findByFrequency(frequency),
+                new TypeToken<List<MateriaDto>>() {}.getType());
+    }
 }

@@ -25,4 +25,14 @@ public interface IMateriaService {
 	 * CADASTRAR uma matéria.  
 	 */
 	public Boolean cadastrar(final MateriaDto materia);
+
+	/**
+	 * Listar matéria por horário minímo de horas
+	 */
+	public List<MateriaDto> listByHourMinimum(int hourMin);
+
+	/**
+	 * Listar matéria por frequência
+	 */
+	public List<MateriaDto> listByFrequency(int frequency);
 }
